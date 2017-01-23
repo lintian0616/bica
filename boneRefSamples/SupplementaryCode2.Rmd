@@ -1,0 +1,54 @@
+---
+title: "Cibersort Reference"
+author: "Lin Tian"
+date: "6/23/2016"
+output: html_document
+---
+
+## Read Reference File
+
+```{r}
+## Move to the "boneRefSamples" directory
+## This directory contains the "ref" folder that contains gene expression counting table for 13 bone marrow cells.
+samples <- list.files(path="Ref", pattern="*.txt",full.names=TRUE)
+sample_names <- sub("Ref/(.*).txt", "\\1", samples)
+
+## Download sample information
+download.file(url="https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-2923/E-MTAB-2923.sdrf.txt", destfile="E-MTAB-2923.sdrf.txt")
+## save "E-MTAB-2923.sdrf.txt" to current working directory "boneRefSamples"
+sampleAnnotation <- read.table("E-MTAB-2923.sdrf.txt", header=TRUE, sep="\t")
+sampleAnnotation <- sampleAnnotation[seq(1, nrow(sampleAnnotation), 2), ]
+sampleAnnotation <- sampleAnnotation[, c("Source.Name", "Characteristics.cell.type.", "Characteristics.phenotype.")]
+colnames(sampleAnnotation) <- c("Marker", "Cell", "Genotype")
+rownames(sampleAnnotation) <- c("osteoblast", "im_osteoblast", "interHSC", "longHSC", "macrophage", "megakaryocyte", "HSCpro", "osteoprogenitor", "MSC", "MC", "endothelial", "reticulocyte", "shortHSC")
+sampleAnnotation <- sampleAnnotation[sample_names, ]
+sampleAnnotation$Abbreviation <- rownames(sampleAnnotation)
+
+template <- read.table(samples[1], header=FALSE, as.is=TRUE, sep="\t", row.names=1, nrow=length(count.fields(samples[1]))-5)
+sample.exp <- matrix(NA, nrow=nrow(template), ncol=length(sample_names))
+rownames(sample.exp) <- rownames(template)
+colnames(sample.exp) <- sample_names
+
+for(i in seq(length(sample_names))) {
+  n.exp <- read.table(samples[i], header=FALSE, as.is=TRUE, sep="\t", row.names=1, nrow=length(count.fields(samples[i]))-5)
+  sample.exp[, sample_names[i]] <- n.exp[rownames(sample.exp), "V2"]
+}
+```
+
+## Normalize Using DESeq2
+
+```{r}
+library(DESeq2)
+library(genefilter)
+ref_dds <- DESeqDataSetFromMatrix(sample.exp, colData=sampleAnnotation, design = ~ Abbreviation)
+ref_dds <- DESeq(ref_dds)
+ref_vsd <- getVarianceStabilizedData(ref_dds)
+ref_vsd <- 2^ref_vsd
+
+sigSelect <- apply(ref_vsd, 1, function(x) sort(as.numeric(x), decreasing=TRUE)[1] / sort(as.numeric(x), decreasing=TRUE)[2] > 8)
+
+## Write Result
+
+write.table(ref_vsd[sigSelect, ], file="BoneSignature_DESeq.txt", sep="\t", quote=FALSE, row.names=TRUE)
+```
+

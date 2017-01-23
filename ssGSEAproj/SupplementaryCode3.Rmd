@@ -1,0 +1,58 @@
+---
+title: "Supplementary Code 3"
+author: "Lin Tian"
+date: "1/22/2017"
+output: html_document
+---
+
+This contains the code how to get ssGSEA signatures.
+
+## Load RNA-seq Normalization Data
+
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE84nnn/GSE84114/suppl/GSE84114_BICA_RNAseq.Normalized.RData.gz
+gunzip GSE84114_BICA_RNAseq.Normalized.RData.gz
+```
+
+```{r}
+load("GSE84114_BICA_RNAseq.Normalized.RData")
+```
+
+
+## Collapse Ensembl ID to Gene Symbols
+
+```{r}
+library(biomaRt)
+ensembl <- useMart("ENSEMBL_MART_ENSEMBL")
+ensembl <- useDataset("hsapiens_gene_ensembl",mart=ensembl)
+map <- getBM(mart=ensembl, attributes=c("ensembl_gene_id", "hgnc_symbol"), filters="ensembl_gene_id", values=rownames(hu_gene.vsd))
+map <- map[map$hgnc_symbol!="", ]
+probes <- rownames(hu_gene.vsd)[rownames(hu_gene.vsd) %in% map$ensembl_gene_id]
+ambiguous <- sapply(probes, function(x) length(unique(map$hgnc_symbol[map$ensembl_gene_id==x]))>1)
+probes <- probes[!ambiguous]
+map <- map[map$ensembl_gene_id %in% rownames(hu_gene.vsd), ]
+
+genenames <- unique(map$hgnc_symbol[map$ensembl_gene_id %in% probes])
+hu_gene.exp <- matrix(NA, nrow=length(genenames), ncol=ncol(hu_gene.vsd))
+rownames(hu_gene.exp) <- genenames
+colnames(hu_gene.exp) <- colnames(hu_gene.vsd)
+for(g in genenames) {
+  p <- as.character(map$ensembl_gene_id[map$hgnc_symbol==g])
+  if(length(p)==1) {
+    hu_gene.exp[g, ] <- hu_gene.vsd[p, ]
+  }
+  else{
+    hu_gene.exp[g, ] <- apply(hu_gene.vsd[p, ], 2, max)
+  }
+}
+```
+
+## Convert the Data to ssGSEA Input Format
+
+```{r}
+bica.GSEA <- hu_gene.exp
+bica.GSEA <- cbind(rownames(bica.GSEA), rep(NA, nrow(bica.GSEA)), bica.GSEA)
+bica.GSEA <- rbind(c("#1.2", rep("", ncol(bica.GSEA)-1)), c(nrow(bica.GSEA), ncol(bica.GSEA)-2, rep("", ncol(bica.GSEA)-2)), c("NAME", "Description", colnames(bica.GSEA)[c(-1, -2)]), bica.GSEA)
+write.table(bica.GSEA, file="~/bica_GSEA.gct", row.names=FALSE, col.names=FALSE, sep="\t", quote=FALSE)
+```
+
