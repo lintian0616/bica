@@ -8,7 +8,7 @@ This repository contains custom codes used for BICA paper.
 	* **Ref folder**: RNA-seq profiling of 13 bone marrow cells from [E-MTAB-2923](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-2923/);
 	* **BICA_DESeq.txt**: gene signature file of 13 bone marrow cells for [CIBERSORT](https://cibersort.stanford.edu/index.php);
 	* **SupplementaryCode2.Rmd**: R markdown code for generating gene signature file using RNA-seq profiling files in **Ref folder**.
-* **ssGSEAproj filder**
+* **ssGSEAproj folder**
 	* **SupplementaryCode3.Rmd**: R markdown code for generating the input file for [ssGSEA](https://www.ncbi.nlm.nih.gov/pubmed/19847166);
 	* **ssGSEA output files**: output files using Gene Ontology Biological Process, Hallmarks, and Oncogenic gene sets database.
 
