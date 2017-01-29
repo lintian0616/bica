@@ -5,8 +5,8 @@ This repository contains custom codes used for BICA paper.
 
 * **SupplementaryCode1.sh**: bash code for reference index building, and read alignment and quantification.
 * **boneRefSamples folder**
-	* **Ref folder**: RNA-seq profiling of 13 bone marrow cells from [E-MTAB-2923](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-2923/);
-	* **BICA_DESeq.txt**: gene signature file of 13 bone marrow cells for [CIBERSORT](https://cibersort.stanford.edu/index.php);
+	* **Ref folder**: RNA-seq profiling of 13 kinds of bone marrow stroma cells from [E-MTAB-2923](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-2923/);
+	* **BICA_DESeq.txt**: gene signature file of 13 kinds of bone marrow stroma cells for [CIBERSORT](https://cibersort.stanford.edu/index.php);
 	* **SupplementaryCode2.Rmd**: R markdown code for generating gene signature file using RNA-seq profiling files in **Ref folder**.
 * **ssGSEAproj folder**
 	* **SupplementaryCode3.Rmd**: R markdown code for generating the input file for [ssGSEA](https://www.ncbi.nlm.nih.gov/pubmed/19847166);
@@ -48,7 +48,7 @@ The bash code used for STAR reference index building and mapping can be found in
 
 We used [CIBERSORT](https://cibersort.stanford.edu/) to estimate the bone stroma percent in in bone-in-culture array (**BICA**) models and *in vivo* bone lesions (**IVBL**).
 
-**CIBERSORT** only provide signature gene file for 22 immune cell types (LM22), and we need to generate a custom 13 bone marrow cell types using public available RNA-seq dataset [E-MTAB-2923](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-2923/).
+**CIBERSORT** only provide signature gene file for 22 immune cell types (LM22), and we need to generate a custom 13 signatures of bone marrow cell types using public available RNA-seq dataset [E-MTAB-2923](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-2923/).
 
 The directory **boneRefSamples** contains:
 
@@ -59,7 +59,7 @@ SupplementaryCode2.Rmd  | R code for generating signature gene file
 BICA_DESeq.txt | signature gene file for 13 bone marrow cells
 Samples\_Ortho\_BICA_Bone.txt | gene expression for RNA-seq samples (orthotopic, BICA, IVBL) in the project
 
-You can use **BICA_DESeq.txt** and **Samples\_Ortho\_BICA_Bone.txt** to generate the **Figure 1e**.
+You can be able to reproduce **Figure 1e** using the **BICA_DESeq.txt** and **Samples\_Ortho\_BICA_Bone.txt**.
 
 ## ssGSEA
 
