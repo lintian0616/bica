@@ -59,7 +59,7 @@ SupplementaryCode2.Rmd  | R code for generating signature gene file
 BICA_DESeq.txt | signature gene file for 13 bone marrow cells
 Samples\_Ortho\_BICA_Bone.txt | gene expression for RNA-seq samples (orthotopic, BICA, IVBL) in the project
 
-You can be able to reproduce **Figure 1e** using the **BICA_DESeq.txt** and **Samples\_Ortho\_BICA_Bone.txt**.
+You should be able to reproduce **Figure 1e** using the **BICA_DESeq.txt** and **Samples\_Ortho\_BICA_Bone.txt**.
 
 ## ssGSEA
 
