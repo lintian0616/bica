@@ -24,7 +24,7 @@ rsem-calculate-expression --star -p 8 --star-gzipped-read-file --output-genome-b
 ## Build Genome Index
 STAR --runMode genomeGenerate --runThreadN 8 --genomeDir $GenomesDir/Mouse_STAR_69 --genomeFastaFiles $GenomesRef/Mus_musculus.GRCm38.dna.primary_assembly.fa --limitGenomeGenerateRAM 120000000000 --sjdbGTFfile $GenomeRef/Mus_musculus.GRCm38.83.chr.gtf --sjdbOverhang 69
 ## Align Reads to Using STAR
-STAR --genomeDir $GenomesRef/Mouse_STAR_69 --readFilesIn sample_1.fastq.gz sample_2.fastq.gz --readFilesCommand zcat -outSAMstrandField intronMotif --runThreadN 8 --outFileNamePrefix sample_
+STAR --genomeDir $GenomesRef/Mouse_STAR_69 --readFilesIn sample_1.fastq.gz sample_2.fastq.gz --readFilesCommand zcat --outSAMstrandField intronMotif --runThreadN 8 --outFileNamePrefix sample_
 ## Sort the Aligned Reads
 samtools view -bS -h sample_Aligned.out.sam | samtools sort -n -@ 8 -m 8G - sample_sorted
 ## Quantification Using HTseq

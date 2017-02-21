@@ -1,7 +1,7 @@
 BICA (bone-in-culture array)
 ============
 
-This repository contains custom codes used for BICA paper.
+This repository contains custom codes used for BICA paper, which has been accepted by **Nature Communications**.
 
 * **SupplementaryCode1.sh**: bash code for reference index building, and read alignment and quantification.
 * **boneRefSamples folder**
