@@ -11,6 +11,7 @@ This repository contains custom codes used for BICA paper, which has been accept
 * **ssGSEAproj folder**
 	* **SupplementaryCode3.Rmd**: R markdown code for generating the input file for [ssGSEA](https://www.ncbi.nlm.nih.gov/pubmed/19847166);
 	* **ssGSEA output files**: output files using Gene Ontology Biological Process, Hallmarks, and Oncogenic gene sets database.
+* XenomeCorrect.py: custom python script that correct the output **fastq** file from **Xenome**.
 
 ## Data Download
 
@@ -36,6 +37,12 @@ We only use human specific reads or mouse specific reads for downstream analysis
 
 ```
 sed 's/^NS500589/@NS500589/' read.fastq | sed 's/^\s*$/+/' | gzip > read.fastq.gz
+```
+
+You can also use the custom python script `XenomeCorrect.py`.
+
+```
+XenomeCorrect.py read.fastq.fastq | gzip > read.fastq.gz
 ```
 
 ## Read Mapping
