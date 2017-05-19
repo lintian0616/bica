@@ -11,6 +11,7 @@ This repository contains custom codes used for BICA paper, which has been publis
 * **ssGSEAproj folder**
 	* **SupplementaryCode3.Rmd**: R markdown code for generating the input file for [ssGSEA](https://www.ncbi.nlm.nih.gov/pubmed/19847166);
 	* **ssGSEA output files**: output files using Gene Ontology Biological Process, Hallmarks, and Oncogenic gene sets database.
+* **Fig1f.Rmd**: R markdown code for PCA and t-SNE plots of Fig. 1f.
 * XenomeCorrect.py: custom python script that correct the output **fastq** file from **Xenome**.
 
 ## Data Download

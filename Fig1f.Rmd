@@ -1,0 +1,51 @@
+---
+title: "Fig. 1f"
+author: "Lin Tian"
+date: "5/19/2017"
+output: html_document
+---
+
+## Download Processed Data
+
+Go to [GSE84114](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84114), and download the processed/normalized data [GSE84114_BICA_RNAseq.Normalized.RData.gz](ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE84nnn/GSE84114/suppl/GSE84114_BICA_RNAseq.Normalized.RData.gz).
+
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE84nnn/GSE84114/suppl/GSE84114_BICA_RNAseq.Normalized.RData.gz
+gunzip GSE84114_BICA_RNAseq.Normalized.RData.gz
+```
+
+## PCA Plots
+
+```{r}
+load("~/GSE84114_BICA_RNAseq.Normalized.RData")
+library(rafalib)
+rmeans_gene <- rowMeans(hu_gene.rld)
+## Select the genes with high expression level (less noise; low background)
+hu_gene.rld <- hu_gene.rld[rmeans_gene >= sort(rmeans_gene, decreasing=TRUE)[100], ]
+hu_gene.sv <- svd(sweep(t(hu_gene.rld), 2, colMeans(t(hu_gene.rld))))
+hu_gene.pc1 <- hu_gene.sv$u[,1]
+hu_gene.pc2 <- hu_gene.sv$u[,2]
+hu_gene.sum <- apply(hu_gene.rld, 2, sum)
+cor.test(hu_gene.pc1, hu_gene.sum)
+plot(hu_gene.pc1, hu_gene.pc2, bg=c("grey", "orange", "brown", "pink")[as.numeric(sampleInfo$Description)], pch=21)
+```
+
+### t-SNE Plots
+
+```{r}
+load("~/GSE84114_BICA_RNAseq.Normalized.RData")
+library(rafalib)
+rmeans_gene <- rowMeans(hu_gene.rld)
+## Select the genes with high expression level (less noise; low background)
+hu_gene.rld <- hu_gene.rld[rmeans_gene >= sort(rmeans_gene, decreasing=TRUE)[100], ]
+
+library(amap)
+dists_gene <- Dist(t(hu_gene.rld), method="euclidean")
+MDS_gene <- cmdscale(dists_gene)
+plot(MDS_gene, bg=c("grey", "orange", "brown", "pink")[as.numeric(sampleInfo$Description)], pch=21, xlab="First dimension",ylab="Second dimension")
+
+library(tsne)
+tsne_gene <- tsne(dists_gene, initial_config=NULL, k=2, initial_dims=2, perplexity=2, max_iter=10000) 
+plot(tsne_gene, bg=c("grey", "orange", "brown", "pink")[as.numeric(sampleInfo$Description)], pch=21, xlab="First dimension",ylab="Second dimension")
+```
+
